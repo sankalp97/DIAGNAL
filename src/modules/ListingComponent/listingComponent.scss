@@ -1,0 +1,82 @@
+.listing-container {
+    background-color: #171717;
+    height: 100%;
+    width: 100%;
+    min-height: 100vh;
+    color: #FFFFFF;
+    padding: 0 10px;
+    .listing-title {
+        font-size: 24px;
+        margin: 0 0 20px 0;
+        padding-top: 20px;
+        display: flex;
+        justify-content: space-between;
+        img {
+            margin-right: 10px;
+            max-width: 20px;
+            max-height: 20px;
+        }
+        .search-icon {
+            background-color: transparent;
+            border: none;
+        }
+        .search-container {
+            display: flex;
+            align-items: center;
+            padding: 5px 10px;
+            .search-input {
+              flex: 1;
+              border: none;
+              outline: none;
+              font-size: 16px;
+          
+              &::placeholder {
+                color: #aaa;
+              }
+            }
+            .search-button {
+              background: none;
+              border: none;
+              cursor: pointer;
+              padding: 0;
+          
+              img {
+                width: 20px;
+                height: 20px;
+              }
+            }
+          }
+        
+    }
+    .paginated-data-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        column-gap: 10px;
+        // gap: 16px;
+        // padding: 16px;
+    }
+    .cards {
+        margin-bottom: 20px;
+        img {
+            min-width: 120px;
+            max-width: 140px;
+            width: 100%;
+            aspect-ratio: 2 / 3;
+            @media screen and (max-width: 370px) {
+                min-width: 90px;
+                max-width: 100px;
+            }
+            @media screen and (min-width: 500px) {
+                min-width: 120px;
+                max-width: 160px;
+            }
+        }
+        .card-name {
+            width: 120px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            display: inline-block;
+        }
+    }
+}
