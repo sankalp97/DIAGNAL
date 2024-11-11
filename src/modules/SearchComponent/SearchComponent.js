@@ -31,6 +31,14 @@ const SearchComponent = ({
 
     return (
         <div className="search-container">
+             {isSearchBarVisible ? <input
+                type="text"
+                className="search-input"
+                placeholder="Search..."
+                autoFocus={isSearchBarVisible}
+                onChange={onSearchChange}
+                onBlur={() => setSearchBarVisible(false)}
+            /> : ''}
             <button className="search-button"
                 onClick={onSearchClicked}
             >
@@ -39,14 +47,6 @@ const SearchComponent = ({
                     alt="search"
                 />
             </button>
-            {isSearchBarVisible ? <input
-                type="text"
-                className="search-input"
-                placeholder="Search..."
-                autoFocus={isSearchBarVisible}
-                onChange={onSearchChange}
-                onBlur={() => setSearchBarVisible(false)}
-            /> : ''}
         </div>
     )
 }
