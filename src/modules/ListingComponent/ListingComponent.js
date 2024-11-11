@@ -12,17 +12,11 @@ const ListingComponent = () => {
   const [filteredData, setFilteredData] = useState(paginatedData);
   const pageNo = useRef(1);
   const fetchMore = useRef(true);
-  const scrollHandler = (e) => {
-    const scrollableHeight = e.target.scrollHeight;
-    const currentScrollPosition = e.target.scrollTop + e.target.clientHeight;
-    if (currentScrollPosition >= scrollableHeight - 50 && !loading) {
-      getData();
-    }
-  };
-
+  const canLoad = useRef(true);;
   const getData = async () => {
     if (fetchMore.current) {
       setLoading(true);
+      canLoad.current = false;
       try {
         const res = await axios.get(`https://test.create.diagnal.com/data/page${pageNo.current}.json`);
         const { data: {
@@ -38,9 +32,19 @@ const ListingComponent = () => {
         console.error(e, 'error');
       }
       setLoading(false);
+      canLoad.current = true;
     }
   };
 
+  const scrollHandler = (e) => {
+    const scrollableHeight = e.target.scrollHeight;
+
+    const currentScrollPosition = e.target.scrollTop + e.target.clientHeight;
+    if (currentScrollPosition >= scrollableHeight - 50 && !loading && canLoad.current) {
+      canLoad.current = false;
+      getData();
+    }
+  };
 
   useEffect(() => {
     if(paginatedData.length === parseInt(count)) {
@@ -61,6 +65,8 @@ const ListingComponent = () => {
     setSearchBarVisible(true);
   }
   
+  const handleImageError = () => {
+  }
 
   const dataToDisplay = filteredData.length ? filteredData : paginatedData;
 
@@ -81,22 +87,26 @@ const ListingComponent = () => {
             setPaginatedData={setPaginatedData}
         />    
       </div>
-      <div className="main-content">
-        <div className="paginated-data-container">
-          {paginatedData.length === 0 && !loading && <p>No data available</p>}
-          {paginatedData.length > 0 && dataToDisplay.map((item, index) => (
-            <div className="cards" key={index}>
-              <Image 
-                  src={`https://test.create.diagnal.com/images/${item['poster-image']}`}
-                  alt={item.name}
-                  fallback={`https://test.create.diagnal.com/images/placeholder_for_missing_posters.png`}
-              />
-              <span className="card-name">{item.name}</span>
-            </div>
-          ))}
-        </div>
-        {loading && <p>Loading...</p>}
+      <div className="paginated-data-container">
+        {paginatedData.length === 0 && !loading && <p>No data available</p>}
+        {paginatedData.length > 0 && dataToDisplay.map((item, index) => (
+          <div className="cards" key={index}>
+            <Image 
+                src={`https://test.create.diagnal.com/images/${item['poster-image']}`}
+                alt={item.name}
+                fallback={`https://test.create.diagnal.com/images/placeholder_for_missing_posters.png`}
+            />
+            {/* <img
+                src={`https://test.create.diagnal.com/images/${item['poster-image']}`}
+                alt={item.name}
+
+                // onError={handleImageError}
+            /> */}
+            <span className="card-name">{item.name}</span>
+          </div>
+        ))}
       </div>
+      {loading && <p>Loading...</p>}
     </section>
   );
 };
