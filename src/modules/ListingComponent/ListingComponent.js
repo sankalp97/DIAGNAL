@@ -34,21 +34,20 @@ const ListingComponent = () => {
     }
   };
 
-  const scrollHandler = (e) => {
-    const scrollableHeight = e.target.scrollHeight;
-    const currentScrollPosition = e.target.scrollTop + e.target.clientHeight;
-    if (currentScrollPosition >= scrollableHeight - 50 && !loading) {
-      getData();
-    }
-  };
-
   useEffect(() => {
     if(paginatedData.length === parseInt(count)) {
         fetchMore.current = false;
     }
-  },[paginatedData])
+  },[paginatedData, count])
 
   useEffect(() => {
+      const scrollHandler = (e) => {
+        const scrollableHeight = e.target.scrollHeight;
+        const currentScrollPosition = e.target.scrollTop + e.target.clientHeight;
+        if (currentScrollPosition >= scrollableHeight - 50) {
+          getData();
+        }
+      };
     getData();
     const scrollContainer = document.querySelector('.listing-container');
     scrollContainer.addEventListener('scroll', scrollHandler);
@@ -59,9 +58,6 @@ const ListingComponent = () => {
 
   const onSearchClicked = () => {
     setSearchBarVisible(true);
-  }
-  
-  const handleImageError = () => {
   }
 
   const dataToDisplay = filteredData.length ? filteredData : paginatedData;
