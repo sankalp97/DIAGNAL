@@ -10,6 +10,8 @@ const ListingComponent = () => {
   const [loading, setLoading] = useState(false);
   const [isSearchBarVisible, setSearchBarVisible] = useState(false)
   const [filteredData, setFilteredData] = useState(paginatedData);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isBackButtonClicked, handleBackbuttonClicked] = useState(false);
   const pageNo = useRef(1);
   const fetchMore = useRef(true);
   const canLoad = useRef(true);;
@@ -38,7 +40,6 @@ const ListingComponent = () => {
 
   const scrollHandler = (e) => {
     const scrollableHeight = e.target.scrollHeight;
-
     const currentScrollPosition = e.target.scrollTop + e.target.clientHeight;
     if (currentScrollPosition >= scrollableHeight - 50 && !loading && canLoad.current) {
       canLoad.current = false;
@@ -65,19 +66,16 @@ const ListingComponent = () => {
     setSearchBarVisible(true);
   }
   
-  const handleImageError = () => {
-  }
-
-  const dataToDisplay = filteredData.length ? filteredData : paginatedData;
+  const dataToDisplay = filteredData.length || searchTerm ? filteredData : paginatedData;
 
   return (
     <section className="listing-container" style={{ overflowY: 'auto', height: '100vh' }}>
       <div className="listing-title">
         <div>
-            <img src="https://test.create.diagnal.com/images/Back.png" alt="back-btn" />
+            {!isBackButtonClicked && <button onClick={() => handleBackbuttonClicked(true)}><img src="https://test.create.diagnal.com/images/Back.png" alt="back-btn" /></button>}
             Romantic Comedy
         </div>
-        <SearchComponent
+        {!isBackButtonClicked && <SearchComponent
             onSearchClicked={onSearchClicked}
             setSearchBarVisible={setSearchBarVisible}
             isSearchBarVisible={isSearchBarVisible}
@@ -85,7 +83,9 @@ const ListingComponent = () => {
             filteredData={filteredData}
             setFilteredData={setFilteredData}
             setPaginatedData={setPaginatedData}
-        />    
+            setSearchTerm={setSearchTerm}
+            searchTerm={searchTerm}
+        />}   
       </div>
       <div className="paginated-data-container">
         {paginatedData.length === 0 && !loading && <p>No data available</p>}
@@ -105,6 +105,9 @@ const ListingComponent = () => {
             <span className="card-name">{item.name}</span>
           </div>
         ))}
+        {
+          searchTerm && !filteredData.length ? <p>No search result</p> : ""
+        }
       </div>
       {loading && <p>Loading...</p>}
     </section>

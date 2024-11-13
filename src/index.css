@@ -75,3 +75,7 @@ code {
   font-style: italic;
 }
 
+button {
+  border: none;
+  background-color: transparent;
+}

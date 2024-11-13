@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
 
 const SearchComponent = ({
     onSearchClicked = () => {},
@@ -7,25 +7,30 @@ const SearchComponent = ({
     paginatedData = [],
     filteredData = [],
     setFilteredData = () => {},
+    setSearchTerm = () => {},
+    searchTerm = ''
 }) => {
-    const [, setSearchTerm] = useState("");
+    const MIN_CHAR = 3;
+    const MAX_CHAR = 20;
     const timeoutRef = useRef(null);
 
     const onSearchChange = (e) => {
         const value = e.target.value;
         setSearchTerm(value);
-        clearTimeout(timeoutRef.current);
-        timeoutRef.current = setTimeout(() => {
-            if(value === "") {
-                setFilteredData([]);
-            }
-            else {
-                const filtered = paginatedData.filter((item) =>
-                item.name.toLowerCase().includes(value.toLowerCase())
-              );
-              setFilteredData(filtered);
-            }
-        }, 300); 
+        if (value.length < MAX_CHAR) {
+            clearTimeout(timeoutRef.current);
+            timeoutRef.current = setTimeout(() => {
+                if(value === "") {
+                    setFilteredData([]);
+                }
+                else {
+                    const filtered = paginatedData.filter((item) =>
+                    item.name.toLowerCase().includes(value.toLowerCase())
+                  );
+                  setFilteredData(filtered);
+                }
+            }, 300); 
+        }
       };
     
 
@@ -36,6 +41,7 @@ const SearchComponent = ({
                 className="search-input"
                 placeholder="Search..."
                 autoFocus={isSearchBarVisible}
+                value={searchTerm}
                 onChange={onSearchChange}
                 onBlur={() => setSearchBarVisible(false)}
             /> : ''}
